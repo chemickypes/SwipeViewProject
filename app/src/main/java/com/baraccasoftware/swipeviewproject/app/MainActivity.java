@@ -2,16 +2,21 @@ package com.baraccasoftware.swipeviewproject.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 public class MainActivity extends Activity implements View.OnTouchListener {
 
-    RelativeLayout mview;
+    private static final String TAG = "SwipeViewExample";
+    FrameLayout mview;
+    RelativeLayout.LayoutParams params ;
 
     float yView;
     float yDown; // y first touch
@@ -21,29 +26,31 @@ public class MainActivity extends Activity implements View.OnTouchListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mview = (RelativeLayout) findViewById(R.id.container);
+        mview = (FrameLayout) findViewById(R.id.container);
         mview.setOnTouchListener(this);
-        yView = mview.getHeight();
-    }
+        params =
+                (RelativeLayout.LayoutParams) mview.getLayoutParams();
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "OnStart()");
+        Log.d(TAG, "height: "+params.height);
+        Log.d(TAG, "view height: "+mview.getHeight());
+        Log.d(TAG, "view y: "+mview.getY());
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "OnResume()");
+        Log.d(TAG, "height: "+params.height);
+        Log.d(TAG, "view height: "+mview.getHeight());
+        Log.d(TAG, "view y: "+mview.getY());
     }
 
     @Override
@@ -52,21 +59,27 @@ public class MainActivity extends Activity implements View.OnTouchListener {
         switch (motionEvent.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
                 yDown = motionEvent.getRawY();
-                return true;
+                Log.d(TAG, "down");
+                break;
             case MotionEvent.ACTION_MOVE:
                 float fingerY = motionEvent.getRawY();
 
-                RelativeLayout.LayoutParams params =
-                        (RelativeLayout.LayoutParams) mview.getLayoutParams();
+
                 int h = (int)(params.height + (fingerY - yDown));
-                if(h >= 65) {
+                Log.d(TAG, "h: "+ h);
+                Log.d(TAG, "view height: "+mview.getHeight());
+                //if(mview.getHeight() >65) {
+                    //Log.d(TAG, "restyle");
                     params.height = h;
                     mview.setLayoutParams(params);
-                }
+                    //mview.invalidate();
+                //}
                 yDown = fingerY;
                 yView = mview.getY();
 
-                return true;
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
         }
         return true;
     }

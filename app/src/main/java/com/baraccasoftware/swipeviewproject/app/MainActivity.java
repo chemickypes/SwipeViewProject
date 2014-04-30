@@ -3,13 +3,10 @@ package com.baraccasoftware.swipeviewproject.app;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 
 public class MainActivity extends Activity implements View.OnTouchListener {
@@ -37,20 +34,13 @@ public class MainActivity extends Activity implements View.OnTouchListener {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "OnStart()");
-        Log.d(TAG, "height: "+params.height);
-        Log.d(TAG, "view height: "+mview.getHeight());
-        Log.d(TAG, "view y: "+mview.getY());
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "OnResume()");
-        Log.d(TAG, "height: "+params.height);
-        Log.d(TAG, "view height: "+mview.getHeight());
-        Log.d(TAG, "view y: "+mview.getY());
+
     }
 
     @Override
@@ -64,16 +54,15 @@ public class MainActivity extends Activity implements View.OnTouchListener {
             case MotionEvent.ACTION_MOVE:
                 float fingerY = motionEvent.getRawY();
 
-
                 int h = (int)(params.height + (fingerY - yDown));
                 Log.d(TAG, "h: "+ h);
                 Log.d(TAG, "view height: "+mview.getHeight());
-                //if(mview.getHeight() >65) {
-                    //Log.d(TAG, "restyle");
-                    params.height = h;
-                    mview.setLayoutParams(params);
-                    //mview.invalidate();
-                //}
+
+                //il limite minimo di altezza che voglio è 65 px
+                //quindi l'altezza sarà il valore massimo tra h calcolato e 65
+                params.height = Math.max(h,65);
+                mview.setLayoutParams(params);
+
                 yDown = fingerY;
                 yView = mview.getY();
 

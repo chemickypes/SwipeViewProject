@@ -26,6 +26,17 @@
             android:textSize="22sp"
             android:textColor="@color/white"
             android:layout_gravity="center_horizontal" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:id="@+id/imageView_barra"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@color/tra_white"/>
+
+
     </FrameLayout>
+
+
 
 </RelativeLayout>

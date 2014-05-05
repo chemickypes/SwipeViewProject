@@ -149,8 +149,8 @@ public class MainActivity extends Activity implements View.OnTouchListener {
     private Animation getTraslateAnimation( float toY){
 
         ResizeWidthAnimation animation = new ResizeWidthAnimation(mview, (int)toY);
-        //animation.setInterpolator(new AccelerateInterpolator(1.0f));
-        animation.setDuration(500);
+        animation.setInterpolator(new AccelerateInterpolator(1.0f));
+        animation.setDuration(300);
         return  animation;
     }
 

@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 
@@ -22,8 +23,9 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 
     private static final String TAG = "SwipeViewExample";
     private static final float MAXIMUM_MINOR_VELOCITY = 150.0f;
-    FrameLayout mview;
+    RelativeLayout mview;
     RelativeLayout.LayoutParams params ;
+    LinearLayout textLayout;
     Display display;
     DisplayMetrics displayMetrics;
     VelocityTracker mTracker;
@@ -35,12 +37,14 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 
     float mSlop;
     private int mMaximumMinorVelocity;
+    int mDimensionRelativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mview = (FrameLayout) findViewById(R.id.container);
+        mview = (RelativeLayout) findViewById(R.id.container);
+        textLayout = (LinearLayout)  findViewById(R.id.text_layout);
         mview.setOnTouchListener(this);
         params =
                 (RelativeLayout.LayoutParams) mview.getLayoutParams();
@@ -50,6 +54,8 @@ public class MainActivity extends Activity implements View.OnTouchListener {
         final float density = displayMetrics.density;
         mMaximumMinorVelocity = (int) (MAXIMUM_MINOR_VELOCITY * density + 0.5f);
 
+        //total length of relative layout
+        mDimensionRelativeLayout = (displayMetrics.heightPixels-10)-65;
 
     }
 
@@ -101,6 +107,10 @@ public class MainActivity extends Activity implements View.OnTouchListener {
                 params.height = Math.max(h,65);
                 mview.setLayoutParams(params);
 
+                //textlayout
+                float percent = (params.height * 100)/ (displayMetrics.heightPixels-10);
+                textLayout.setAlpha(percent/100);
+
                 currentY = fingerY;
                 //yView = mview.getY();
 
@@ -126,18 +136,22 @@ public class MainActivity extends Activity implements View.OnTouchListener {
                     //params.height = displayMetrics.heightPixels-10;
                     //Log.d(TAG,"params.heigth: "+params.height);
                     mview.startAnimation(getTraslateAnimation( displayMetrics.heightPixels-10));
-
+                    textLayout.setAlpha(1.0f);
                     //mview.setLayoutParams(params);
                 }else if( Math.abs(velocityY) >=mMaximumMinorVelocity ) {
                     if (deltay > 0) {
                         mview.startAnimation(getTraslateAnimation(displayMetrics.heightPixels - 10));
+                        textLayout.setAlpha(1.0f);
                     } else {
                         mview.startAnimation(getTraslateAnimation(65));
+                        textLayout.setAlpha(0.0f);
                     }
                 }else if(params.height < (displayMetrics.heightPixels) / 2){
                     mview.startAnimation(getTraslateAnimation( 65));
+                    textLayout.setAlpha(0.0f);
                 }else  if(params.height >= (displayMetrics.heightPixels) / 2){
                     mview.startAnimation(getTraslateAnimation( displayMetrics.heightPixels-10));
+                    textLayout.setAlpha(1.0f);
                 }
             case MotionEvent.ACTION_CANCEL:
                 //mTracker.recycle();
